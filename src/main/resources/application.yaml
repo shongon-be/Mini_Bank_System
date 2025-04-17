@@ -1,0 +1,17 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /minibank
+
+spring:
+  application:
+    name: mini-bank
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/mini_bank"
+    username: postgres
+    password: 16102004
+    driver-class-name: "org.postgresql.Driver"
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: off
