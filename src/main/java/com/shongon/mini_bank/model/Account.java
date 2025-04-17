@@ -1,9 +1,6 @@
 package com.shongon.mini_bank.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -22,10 +19,22 @@ public class Account {
     Long accountId;
 
     String accountNumber;
+
     Double balance;
-    String status;
+
+    @Enumerated(EnumType.STRING)
+    AccountStatus status;
+
     String currency;
 
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User user;
+}
+
+enum AccountStatus {
+    ACTIVE, BLOCKED, CLOSED
 }

@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -34,12 +35,15 @@ public class User {
 
     String status;
 
+    @ManyToMany
+    Set<Role> roles;
+
     @CreationTimestamp
     @Column(updatable = false)
     LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(insertable = false)
+    @Column
     LocalDateTime updatedAt;
 
     LocalDateTime deletedAt;
@@ -47,4 +51,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade =CascadeType.ALL, fetch = FetchType.LAZY)
     @MapKey(name = "accountNumber")
     Map<String, Account> accountMap;
+}
+
+enum UserStatus {
+    ACTIVE, SUSPENDED, DELETED
 }

@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -21,14 +22,6 @@ public class Role {
     String roleName;
     String roleDescription;
 
-    @ManyToMany(mappedBy = "roles")
-    List<User> users;
-
     @ManyToMany
-    @JoinTable(
-            name = "Role_Permission",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_id")
-    )
-    List<Permission> permissions;
+    Set<Permission> permissions;
 }

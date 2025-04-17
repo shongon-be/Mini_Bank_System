@@ -19,6 +19,10 @@ public class Transaction {
     Long transactionId;
 
     @ManyToOne
+    @JoinColumn(name = "initiated_by_user_id")
+    User initiatedBy;
+
+    @ManyToOne
     @JoinColumn(name = "account_id_sender")
     Account senderAccount;
 
@@ -28,7 +32,10 @@ public class Transaction {
 
     Double amount;
     String type;
-    String status;
+
+    @Enumerated(EnumType.STRING)
+    TransactionStatus status;
+
     Double fee;
     String description;
     String currency;
@@ -39,4 +46,7 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "transaction_type_id")
     TransactionType transactionType;
+}
+enum TransactionStatus {
+    PENDING, COMPLETED, FAILED
 }

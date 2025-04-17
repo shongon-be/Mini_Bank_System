@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,6 +25,12 @@ public class OTP {
     String code;
     String purpose;
     LocalDateTime expiryDate;
-    String status;
+
+    @Enumerated(EnumType.STRING)
+    OtpStatus status;
+
     LocalDateTime createdAt;
+}
+enum OtpStatus {
+    PENDING, VERIFIED, EXPIRED
 }

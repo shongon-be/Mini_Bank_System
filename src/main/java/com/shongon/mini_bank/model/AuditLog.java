@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuditLog<T> {
+public class AuditLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long logId;
@@ -24,7 +24,7 @@ public class AuditLog<T> {
 
     String action;
     String entityName;
-    T entityId;
+    Long entityId;
     String details;
     LocalDateTime timestamp;
 }
