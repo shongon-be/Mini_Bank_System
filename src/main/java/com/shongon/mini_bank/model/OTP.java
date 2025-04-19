@@ -1,5 +1,6 @@
 package com.shongon.mini_bank.model;
 
+import com.shongon.mini_bank.constant.OtpStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -30,7 +31,4 @@ public class OTP {
     OtpStatus status;
 
     LocalDateTime createdAt;
-}
-enum OtpStatus {
-    PENDING, VERIFIED, EXPIRED
 }

@@ -17,7 +17,7 @@ import java.util.List;
 public class TransactionType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    Long transactionTypeId;
 
     String transactionTypeName;
 

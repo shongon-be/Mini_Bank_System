@@ -1,5 +1,6 @@
 package com.shongon.mini_bank.model;
 
+import com.shongon.mini_bank.constant.TransactionStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -31,7 +32,6 @@ public class Transaction {
     Account receiverAccount;
 
     Double amount;
-    String type;
 
     @Enumerated(EnumType.STRING)
     TransactionStatus status;
@@ -47,6 +47,4 @@ public class Transaction {
     @JoinColumn(name = "transaction_type_id")
     TransactionType transactionType;
 }
-enum TransactionStatus {
-    PENDING, COMPLETED, FAILED
-}
+

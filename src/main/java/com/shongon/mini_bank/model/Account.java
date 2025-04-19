@@ -1,5 +1,6 @@
 package com.shongon.mini_bank.model;
 
+import com.shongon.mini_bank.constant.AccountStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -35,6 +36,4 @@ public class Account {
     User user;
 }
 
-enum AccountStatus {
-    ACTIVE, BLOCKED, CLOSED
-}
+
