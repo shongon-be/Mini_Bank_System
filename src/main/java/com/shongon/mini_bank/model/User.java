@@ -1,6 +1,6 @@
 package com.shongon.mini_bank.model;
 
-import com.shongon.mini_bank.constant.UserStatus;
+import com.shongon.mini_bank.constant.status.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

@@ -1,6 +1,6 @@
 package com.shongon.mini_bank.model;
 
-import com.shongon.mini_bank.constant.AccountStatus;
+import com.shongon.mini_bank.constant.status.AccountStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

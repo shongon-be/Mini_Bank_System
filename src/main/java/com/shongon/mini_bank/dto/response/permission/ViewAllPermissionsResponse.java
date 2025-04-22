@@ -1,0 +1,14 @@
+package com.shongon.mini_bank.dto.response.permission;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
+
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ViewAllPermissionsResponse {
+    String permissionName;
+    String permissionDescription;
+}
