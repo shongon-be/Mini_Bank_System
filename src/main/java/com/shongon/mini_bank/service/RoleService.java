@@ -8,6 +8,7 @@ import com.shongon.mini_bank.dto.response.role.ViewAllRolesResponse;
 import com.shongon.mini_bank.exception.AppException;
 import com.shongon.mini_bank.exception.ErrorCode;
 import com.shongon.mini_bank.mapper.RoleMapper;
+import com.shongon.mini_bank.model.Permission;
 import com.shongon.mini_bank.model.Role;
 import com.shongon.mini_bank.repository.PermissionRepository;
 import com.shongon.mini_bank.repository.RoleRepository;
@@ -37,9 +38,15 @@ public class RoleService {
 
         Role role = roleMapper.toCreateRole(request);
 
-        var permissions = permissionRepository.findAllByPermissionName(request.getPermissions().toString());
+        role.setPermissions(new HashSet<>());
 
-        role.setPermissions(new HashSet<>((Integer) permissions));
+        if (request.getPermissions() != null) {
+            for (String permName : request.getPermissions()) {
+                Permission permission = permissionRepository.findByPermissionName(permName)
+                        .orElseThrow(() -> new AppException(ErrorCode.PERMISSION_NOT_FOUND));
+                role.getPermissions().add(permission);
+            }
+        }
 
         return roleMapper.toCreateRoleResponse(roleRepository.save(role));
     }
@@ -62,8 +69,15 @@ public class RoleService {
 
         roleMapper.toUpdateRole(role, request);
 
-        var permissions = permissionRepository.findAllByPermissionName(request.getPermissions().toString());
-        role.setPermissions(new HashSet<>((Integer)permissions));
+        role.getPermissions().clear();
+
+        if (request.getPermissions() != null) {
+            for (String permName : request.getPermissions()) {
+                Permission permission = permissionRepository.findByPermissionName(permName)
+                        .orElseThrow(() -> new AppException(ErrorCode.PERMISSION_NOT_FOUND));
+                role.getPermissions().add(permission);
+            }
+        }
 
         return roleMapper.toUpdateRoleResponse(roleRepository.save(role));
     }

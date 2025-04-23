@@ -19,7 +19,7 @@ public class Permission {
     Long permissionId;
 
     String permissionName;
-    String description;
+    String permissionDescription;
 
     @ManyToMany(mappedBy = "permissions")
     List<Role> roles;

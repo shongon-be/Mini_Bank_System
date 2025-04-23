@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.ALWAYS)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ViewAllPermissionsResponse {
     String permissionName;
