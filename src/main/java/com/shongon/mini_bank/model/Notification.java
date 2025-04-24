@@ -3,6 +3,7 @@ package com.shongon.mini_bank.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -23,6 +24,7 @@ public class Notification {
     User user;
 
     String message;
-    Boolean isRead;
+
+    @CreationTimestamp
     LocalDateTime createdAt;
 }

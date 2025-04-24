@@ -1,6 +1,6 @@
 package com.shongon.mini_bank.controller;
 
-import com.shongon.mini_bank.dto.ApiResponse;
+import com.shongon.mini_bank.utils.ApiResponse;
 import com.shongon.mini_bank.dto.request.role.CreateRoleRequest;
 import com.shongon.mini_bank.dto.request.role.UpdateRoleRequest;
 import com.shongon.mini_bank.dto.response.role.CreateRoleResponse;

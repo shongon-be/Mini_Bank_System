@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
@@ -28,23 +29,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long userId;
 
-    @NotBlank(message = "Username cannot be empty")
-    @Size(min = 3, max = 50, message = "Username must be between 3-50 characters")
     String username;
 
-    @NotBlank(message = "Password cannot be empty")
-    @Size(min = 8, message = "Password must be at least 8 characters")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",
-            message = "Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character")
+    String fullname;
+
     String password;
 
-    @NotBlank(message = "Email cannot be empty")
-    @Email
     String email;
 
-    @NotBlank(message = "Phone number cannot be empty")
-    @Pattern(regexp = "(^$|[0-9]{10})", message = "Phone number must be at least 10 digits")
     String phoneNumber;
+
+    LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
     UserStatus status;
@@ -57,12 +52,11 @@ public class User {
     LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column
     LocalDateTime updatedAt;
 
     LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "user", cascade =CascadeType.ALL, fetch = FetchType.LAZY)
     @MapKey(name = "accountNumber")
-    Map<String, Account> accountMap;
+    Map<String, Account> accountTable;
 }

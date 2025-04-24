@@ -1,4 +1,4 @@
-package com.shongon.mini_bank.dto;
+package com.shongon.mini_bank.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

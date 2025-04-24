@@ -4,6 +4,7 @@ import com.shongon.mini_bank.constant.status.TransactionStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -40,7 +41,9 @@ public class Transaction {
     String description;
     String currency;
 
+    @CreationTimestamp
     LocalDateTime createdAt;
+
     LocalDateTime completedAt;
 
     @ManyToOne
