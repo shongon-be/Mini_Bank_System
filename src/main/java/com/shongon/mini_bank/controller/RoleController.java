@@ -6,7 +6,7 @@ import com.shongon.mini_bank.dto.request.role.UpdateRoleRequest;
 import com.shongon.mini_bank.dto.response.role.CreateRoleResponse;
 import com.shongon.mini_bank.dto.response.role.UpdateRoleResponse;
 import com.shongon.mini_bank.dto.response.role.ViewAllRolesResponse;
-import com.shongon.mini_bank.service.RoleService;
+import com.shongon.mini_bank.service.security.RoleService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

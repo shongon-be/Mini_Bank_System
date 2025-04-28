@@ -56,7 +56,6 @@ public class User {
 
     LocalDateTime deletedAt;
 
-    @OneToMany(mappedBy = "user", cascade =CascadeType.ALL, fetch = FetchType.LAZY)
-    @MapKey(name = "accountNumber")
-    Map<String, Account> accountTable;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    Set<Account> accounts;
 }

@@ -4,7 +4,7 @@ import com.shongon.mini_bank.utils.ApiResponse;
 import com.shongon.mini_bank.dto.request.permission.CreatePermissionRequest;
 import com.shongon.mini_bank.dto.response.permission.CreatePermissionResponse;
 import com.shongon.mini_bank.dto.response.permission.ViewAllPermissionsResponse;
-import com.shongon.mini_bank.service.PermissionService;
+import com.shongon.mini_bank.service.security.PermissionService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

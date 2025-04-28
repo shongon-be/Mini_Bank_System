@@ -13,6 +13,13 @@ public enum ErrorCode {
 
     ROLE_EXISTED(409, HttpStatus.CONFLICT, "Role already existed"),
     ROLE_NOT_FOUND(404, HttpStatus.NOT_FOUND, "Role not found"),
+
+    LOGIN_FAILED(401, HttpStatus.UNAUTHORIZED, "Username or password is incorrect"),
+    INVALID_TOKEN(401, HttpStatus.UNAUTHORIZED, "Invalid/Expired Token"),
+    UNAUTHENTICATED(401, HttpStatus.UNAUTHORIZED, "Unauthenticated"),
+
+    USER_NOT_FOUND(404, HttpStatus.NOT_FOUND, "User not found"),
+
     ;
 
 

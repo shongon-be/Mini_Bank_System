@@ -1,4 +1,4 @@
-package com.shongon.mini_bank.service;
+package com.shongon.mini_bank.service.security;
 
 import com.shongon.mini_bank.dto.request.permission.CreatePermissionRequest;
 import com.shongon.mini_bank.dto.response.permission.CreatePermissionResponse;
