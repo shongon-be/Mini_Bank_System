@@ -1,4 +1,4 @@
-package com.shongon.mini_bank.controller;
+package com.shongon.mini_bank.controller.auth;
 
 
 
