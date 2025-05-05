@@ -10,6 +10,7 @@ import com.shongon.mini_bank.model.Permission;
 import com.shongon.mini_bank.model.Role;
 import com.shongon.mini_bank.repository.PermissionRepository;
 import com.shongon.mini_bank.repository.RoleRepository;
+import com.shongon.mini_bank.utils.audit.Auditable;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,6 +30,7 @@ public class PermissionService {
 
     // Create permission
     @Transactional
+    @Auditable(action = "CREATE_PERMISSION", entityType = "PERMISSION")
     public CreatePermissionResponse createPermission(CreatePermissionRequest request) {
         if (permissionRepository.existsByPermissionName((request.getPermissionName())))
             throw new AppException(ErrorCode.PERMISSION_EXISTED);
@@ -38,8 +40,9 @@ public class PermissionService {
         return permissionMapper.toCreatePermissionResponse(permissionRepository.save(permission));
     }
 
-    // Get list of permissions
+    // Get a list of permissions
     @Transactional
+    @Auditable(action = "VIEW_ALL_PERMISSIONS", entityType = "PERMISSION")
     public List<ViewAllPermissionsResponse> getAllPermissions() {
         return permissionRepository.findAll().stream()
                 .map(permissionMapper::toViewAllPermissionsResponse)
@@ -47,6 +50,7 @@ public class PermissionService {
     }
 
     @Transactional
+    @Auditable(action = "DELETE_PERMISSION", entityType = "PERMISSION")
     public void deletePermission(String permissionName) {
         Permission permission = permissionRepository.findByPermissionName(permissionName)
                 .orElseThrow(() -> new AppException(ErrorCode.PERMISSION_NOT_FOUND));

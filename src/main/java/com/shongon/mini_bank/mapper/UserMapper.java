@@ -6,6 +6,7 @@ import com.shongon.mini_bank.dto.request.user.UpdateUserInfoRequest;
 import com.shongon.mini_bank.dto.response.user.*;
 import com.shongon.mini_bank.model.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 
@@ -18,6 +19,7 @@ public interface UserMapper {
 
     void changePassword (@MappingTarget User user, ChangePasswordRequest changePasswordRequest);
 
+    @Mapping(target = "message", constant = "Registered successfully!")
     RegisterResponse toRegisterResponse (User user);
 
     UpdateUserInfoResponse toUpdateUserInfoResponse (User user);

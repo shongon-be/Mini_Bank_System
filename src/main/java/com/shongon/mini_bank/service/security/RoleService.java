@@ -13,6 +13,7 @@ import com.shongon.mini_bank.model.Role;
 import com.shongon.mini_bank.repository.PermissionRepository;
 import com.shongon.mini_bank.repository.RoleRepository;
 
+import com.shongon.mini_bank.utils.audit.Auditable;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,6 +33,7 @@ public class RoleService {
 
     // Create new role
     @Transactional
+    @Auditable(action = "CREATE_ROLE", entityType = "ROLE")
     public CreateRoleResponse createRole(CreateRoleRequest request) {
         if (roleRepository.existsByRoleName(request.getRoleName()))
             throw new AppException(ErrorCode.ROLE_EXISTED);
@@ -53,6 +55,7 @@ public class RoleService {
 
 
     // View all roles
+    @Auditable(action = "VIEW_ALL_ROLES", entityType = "ROLE")
     @Transactional (readOnly = true)
     public List<ViewAllRolesResponse> getAllRoles() {
         return roleRepository.findAll().stream()
@@ -63,6 +66,7 @@ public class RoleService {
 
     // Update permissions of role
     @Transactional
+    @Auditable(action = "UPDATE_ROLE_PERMISSIONS", entityType = "ROLE")
     public UpdateRoleResponse updateRolePermissions(String roleName, UpdateRoleRequest request) {
         Role role = roleRepository.findByRoleName(roleName)
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
@@ -83,6 +87,7 @@ public class RoleService {
     }
 
     @Transactional
+    @Auditable(action = "DELETE_ROLE", entityType = "ROLE")
     public void deleteRole(String roleName) {
         if (!roleRepository.existsByRoleName(roleName)) throw new AppException(ErrorCode.ROLE_NOT_FOUND);
 

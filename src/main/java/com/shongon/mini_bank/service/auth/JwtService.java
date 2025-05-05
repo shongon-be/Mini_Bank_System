@@ -44,7 +44,7 @@ public class JwtService {
 
     // generate token
     public String generateToken(User user){
-        JWSHeader header = new JWSHeader(JWSAlgorithm.ES512);
+        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())

@@ -9,5 +9,5 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RegisterResponse {
-    String message = "Registered successfully!";
+    String message;
 }

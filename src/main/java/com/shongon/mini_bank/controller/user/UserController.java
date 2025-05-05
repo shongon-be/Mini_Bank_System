@@ -6,6 +6,7 @@ import com.shongon.mini_bank.dto.response.user.RegisterResponse;
 import com.shongon.mini_bank.dto.response.user.UpdateUserInfoResponse;
 import com.shongon.mini_bank.service.user.UserService;
 import com.shongon.mini_bank.utils.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,11 +27,11 @@ public class UserController {
                 .build();
     }
 
-    @PutMapping("/update/{username}")
-    public ApiResponse<UpdateUserInfoResponse> update(@PathVariable String username, @RequestBody UpdateUserInfoRequest updateUserInfoRequest) {
+    @PutMapping("/update/{userId}")
+    public ApiResponse<UpdateUserInfoResponse> update(@PathVariable Long userId, @Valid @RequestBody UpdateUserInfoRequest updateUserInfoRequest) {
         return ApiResponse.<UpdateUserInfoResponse>builder()
                 .code(200)
-                .result(userService.updateUserInfo(username, updateUserInfoRequest))
+                .result(userService.updateUserInfo(userId, updateUserInfoRequest))
                 .build();
     }
 

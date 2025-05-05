@@ -10,6 +10,7 @@ import com.shongon.mini_bank.model.Role;
 import com.shongon.mini_bank.model.User;
 import com.shongon.mini_bank.repository.RoleRepository;
 import com.shongon.mini_bank.repository.UserRepository;
+import com.shongon.mini_bank.utils.audit.Auditable;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -33,14 +34,16 @@ public class UserProfileService {
     PasswordEncoder passwordEncoder;
 
     // USER
-    @PostAuthorize("returnObject.username == authentication.name")
     @Transactional(readOnly = true)
+    @Auditable(action = "GET_MY_INFO", entityType = "USER")
+    @PostAuthorize("returnObject.username == authentication.name")
     public ViewUserProfileResponse getMyInfo() {
         User info = getCurrentAuthenticatedUser();
         return userMapper.toViewUserProfileResponse(info);
     }
 
     @Transactional
+    @Auditable(action = "CHANGE_PASSWORD", entityType = "USER")
     public ChangePasswordResponse changePassword(ChangePasswordRequest request) {
         User curUser = getCurrentAuthenticatedUser();
 
@@ -50,16 +53,20 @@ public class UserProfileService {
             throw new AppException(ErrorCode.INVALID_PERMISSION);
         }
 
+        userMapper.changePassword(curUser, request);
+
         if (!passwordEncoder.matches(request.getOldPassword(), curUser.getPassword())) {
             throw new AppException(ErrorCode.INVALID_OLD_PASSWORD);
         }
 
         curUser.setPassword(passwordEncoder.encode(request.getNewPassword()));
+
         return userMapper.toChangePasswordResponse(userRepository.save(curUser));
     }
 
     // ADMIN
     @Transactional
+    @Auditable(action = "ASSIGN_ROLE_TO_USER", entityType = "USER")
     public void assignRoleToUser(Long userId, String roleName) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -75,6 +82,7 @@ public class UserProfileService {
     }
 
     @Transactional
+    @Auditable(action = "REMOVE_ROLE_FROM_USER", entityType = "USER")
     public void removeRoleFromUser(Long userId, String roleName) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));

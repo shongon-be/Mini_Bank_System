@@ -37,7 +37,7 @@ public class ViewAllUsersResponse {
 
     Set<ViewAllRolesResponse> roles;
 
-//    Map<String, Account> accountTable; -- View all account by fullname
+//    Map<String, Account> accountTable; -- View all accounts by fullname
 
     @JsonSerialize(using = CustomTime.class)
     LocalDateTime createdAt;

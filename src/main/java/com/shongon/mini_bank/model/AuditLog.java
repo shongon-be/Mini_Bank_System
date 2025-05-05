@@ -3,6 +3,7 @@ package com.shongon.mini_bank.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CurrentTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +19,7 @@ public class AuditLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long logId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     User user;
 
@@ -26,5 +27,7 @@ public class AuditLog {
     String entityName;
     Long entityId;
     String details;
+
+    @CurrentTimestamp
     LocalDateTime timestamp;
 }

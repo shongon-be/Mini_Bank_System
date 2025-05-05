@@ -5,6 +5,7 @@ import com.shongon.mini_bank.dto.response.user.ChangePasswordResponse;
 import com.shongon.mini_bank.dto.response.user.ViewUserProfileResponse;
 import com.shongon.mini_bank.service.user.UserProfileService;
 import com.shongon.mini_bank.utils.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,7 +27,7 @@ public class UserProfileController {
     }
 
     @PutMapping("/change-password")
-    public ApiResponse<ChangePasswordResponse> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+    public ApiResponse<ChangePasswordResponse> changePassword(@RequestBody @Valid ChangePasswordRequest changePasswordRequest) {
         return ApiResponse.<ChangePasswordResponse>builder()
                 .code(200)
                 .result(userProfileService.changePassword(changePasswordRequest))

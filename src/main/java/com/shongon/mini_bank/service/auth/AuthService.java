@@ -12,6 +12,7 @@ import com.shongon.mini_bank.exception.ErrorCode;
 import com.shongon.mini_bank.model.InvalidatedToken;
 import com.shongon.mini_bank.repository.InvalidatedTokenRepository;
 import com.shongon.mini_bank.repository.UserRepository;
+import com.shongon.mini_bank.utils.audit.Auditable;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -33,6 +34,7 @@ public class AuthService {
     JwtService jwtService;
 
     @Transactional
+    @Auditable(action = "AUTHENTICATE", entityType = "USER")
     public AuthenticateResponse authenticate(AuthenticateRequest authRequest) {
         var user = userRepository
                 .findByUsername(authRequest.getUsername())
@@ -50,6 +52,7 @@ public class AuthService {
     }
 
     @Transactional
+    @Auditable(action = "LOGOUT", entityType = "USER")
     public void logout(LogoutRequest logoutRequest) throws ParseException, JOSEException {
         try {
             var signToken = jwtService.verifyToken(logoutRequest.getToken(), true);
@@ -68,6 +71,7 @@ public class AuthService {
     }
 
     @Transactional
+    @Auditable(action = "REFRESH_TOKEN", entityType = "USER")
     public AuthenticateResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
         var checkToken = jwtService.verifyToken(request.getToken(), true);
 
@@ -96,6 +100,7 @@ public class AuthService {
     }
 
     @Transactional
+    @Auditable(action = "INTROSPECT", entityType = "USER")
     public IntrospectResponse introspect(IntrospectRequest introspectRequest) {
         var token = introspectRequest.getToken();
         boolean isValid = true;

@@ -32,9 +32,7 @@ public class AuthController {
     AuthService authService;
 
     @PostMapping("/introspect")
-    public ApiResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest introspectRequest)
-            throws ParseException, JOSEException {
-
+    public ApiResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest introspectRequest) {
         return ApiResponse.<IntrospectResponse>builder()
                 .code(200)
                 .result(authService.introspect(introspectRequest))
@@ -50,11 +48,12 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ApiResponse<Void> logout(@RequestBody LogoutRequest logoutRequest) throws ParseException, JOSEException {
-
+    public ApiResponse<String> logout(@RequestBody LogoutRequest logoutRequest) throws ParseException, JOSEException {
         authService.logout(logoutRequest);
-
-        return ApiResponse.<Void>builder().code(200).build();
+        return ApiResponse.<String>builder()
+                .code(200)
+                .result("Logout success")
+                .build();
     }
 
     @PostMapping("/refresh")
