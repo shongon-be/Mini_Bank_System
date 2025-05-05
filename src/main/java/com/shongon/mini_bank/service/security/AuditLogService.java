@@ -12,13 +12,15 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -28,6 +30,45 @@ public class AuditLogService {
     AuditLogRepository auditLogRepository;
     AuditLogMapper auditLogMapper;
     UserRepository userRepository;
+
+    @Transactional(readOnly = true)
+    public Page<AuditLogResponse> getUserLogsPaginated(Long userId, Pageable pageable) {
+        if (!userRepository.existsById(userId)) {
+            throw new AppException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        Page<AuditLog> logPage = auditLogRepository.findByUser_UserId(userId, pageable);
+
+        return logPage.map(auditLogMapper::toAuditLogResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<AuditLogResponse> getAllLogsPaginated(Pageable pageable) {
+        Page<AuditLog> logPage = auditLogRepository.findAll(pageable);
+        return logPage.map(auditLogMapper::toAuditLogResponse);
+    }
+
+    // Lấy log theo entityName theo trang và sắp xếp
+    @Transactional(readOnly = true)
+    public Page<AuditLogResponse> getEntityLogsPaginated(String entityName, Pageable pageable) {
+        Page<AuditLog> logPage = auditLogRepository.findByEntityName(entityName, pageable);
+        return logPage.map(auditLogMapper::toAuditLogResponse);
+    }
+
+
+//    ******************************************************************************************
+    // Log methods
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void logAfterCommit(Long userId, String action, String entityName, Long entityId, String details) {
+        User user = userRepository.findById(userId)
+                .orElse(null);
+
+        if (user != null) {
+            logAction(user, action, entityName, entityId, details);
+        } else {
+            log.warn("Cannot log action for non-existent user with ID: {}", userId);
+        }
+    }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void logAction(User user, String action, String entityName, Long entityId, String details) {
@@ -43,17 +84,6 @@ public class AuditLogService {
         auditLogRepository.save(auditLog);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void logRegisterAction(String username, String action, String entityName, Long entityId, String details) {
-        User user = userRepository.findByUsername(username)
-                .orElse(null);
-
-        if (user != null) {
-            logAction(user, action, entityName, entityId, details);
-        } else {
-            log.warn("Cannot log action for non-existent user: {}", username);
-        }
-    }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void logAction(String action, String entityName, Long entityId, String details) {
@@ -63,23 +93,18 @@ public class AuditLogService {
         }
     }
 
-    @Transactional(readOnly = true)
-    public List<AuditLogResponse> getUserLogs(Long userId) {
-        List<AuditLog> logs = auditLogRepository.findByUser_UserId(userId);
-        if (logs.isEmpty()) {
-            throw new AppException(ErrorCode.USER_LOGS_NOT_FOUND);
+    // Automation deletes the "AUTHENTICATE" action after 3 days - timestamp
+    @Scheduled(fixedRate = 3 * 24 * 60 * 60 * 1000)
+    @Transactional
+    public void cleanupOldAuthenticationLogs() {
+        LocalDateTime cutoffDate = LocalDateTime.now().minusDays(3);
+        log.info("Starting scheduled task: Deleting AUTHENTICATE logs older than {}", cutoffDate);
+        try {
+            int deletedCount = auditLogRepository.deleteOldLogsByAction("AUTHENTICATE", cutoffDate);
+            log.info("Finished scheduled task: Deleted {} AUTHENTICATE logs older than {}", deletedCount, cutoffDate);
+        } catch (Exception e) {
+            log.error("Error during scheduled deletion of old authentication logs", e);
         }
-        return logs.stream()
-                .map(auditLogMapper::toAuditLogResponse)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<AuditLogResponse> getEntityLogs(String entityName) {
-        return auditLogRepository.findByEntityName(entityName)
-                .stream()
-                .map(auditLogMapper::toAuditLogResponse)
-                .toList();
     }
 
     private User getCurrentUser() {

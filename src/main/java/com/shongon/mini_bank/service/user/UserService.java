@@ -26,6 +26,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -45,7 +47,6 @@ public class UserService {
     AuditLogService auditLogService;
 
     @Transactional
-    @Auditable(action = "REGISTER", entityType = "USER")
     public RegisterResponse register(RegisterRequest request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new AppException(ErrorCode.USER_EXISTED);
@@ -60,19 +61,24 @@ public class UserService {
 
         user.setRoles(roles);
 
-        // Lưu user trước
         User savedUser = userRepository.save(user);
 
-        // Sử dụng phương thức mới để log theo username
-        auditLogService.logRegisterAction(
-                savedUser.getUsername(),
-                "REGISTER",
-                "USER",
-                savedUser.getUserId(),
-                "New register: " + savedUser.getUsername()
-        );
+        RegisterResponse response =  userMapper.toRegisterResponse(savedUser);
 
-        return userMapper.toRegisterResponse(savedUser);
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                auditLogService.logAfterCommit(
+                        savedUser.getUserId(),
+                        "REGISTER",
+                        "USER",
+                        savedUser.getUserId(),
+                        "New register: " + savedUser.getUsername()
+                );
+            }
+        });
+
+        return response;
     }
 
     @Transactional
@@ -123,14 +129,11 @@ public class UserService {
     @Transactional
     @Auditable(action = "DELETE_USER", entityType = "USER")
     public void deleteUser(Long userId) {
-        // Find the user to ensure they exist (optional but good practice)
         User userToDelete = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        // Delete all associated audit logs
         auditLogRepository.deleteByUser_UserId(userId);
 
-        // Now delete the user
         userRepository.delete(userToDelete);
     }
 }

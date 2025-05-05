@@ -11,6 +11,10 @@ import com.shongon.mini_bank.utils.ApiResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,21 +87,35 @@ public class AdminController {
                 .build();
     }
 
-    // Get all logs of the user
-    @GetMapping("/user-logs/{userId}")
-    public ApiResponse<List<AuditLogResponse>> getUserLogs(@PathVariable Long userId) {
-        return ApiResponse.<List<AuditLogResponse>>builder()
-                .code(200)
-                .result(auditLogService.getUserLogs(userId))
+    @GetMapping("/logs")
+    public ApiResponse<Page<AuditLogResponse>> getAllLogs(
+            @PageableDefault(sort = "timestamp", direction = Sort.Direction.DESC) Pageable pageable)
+    {
+        return ApiResponse.<Page<AuditLogResponse>>builder()
+                .message("Audit logs retrieved successfully.")
+                .result(auditLogService.getAllLogsPaginated(pageable))
                 .build();
     }
 
-    // Get all entity logs
+    @GetMapping("/user-logs/{userId}")
+    public ApiResponse<Page<AuditLogResponse>> getUserLogs(
+            @PathVariable Long userId,
+            @PageableDefault(sort = "timestamp", direction = Sort.Direction.DESC) Pageable pageable)
+    {
+        return ApiResponse.<Page<AuditLogResponse>>builder()
+                .message("User audit logs retrieved successfully.")
+                .result(auditLogService.getUserLogsPaginated(userId, pageable))
+                .build();
+    }
+
     @GetMapping("/entity-logs/{entityName}")
-    public ApiResponse<List<AuditLogResponse>> getEntityLogs(@PathVariable String entityName) {
-        return ApiResponse.<List<AuditLogResponse>>builder()
-                .code(200)
-                .result(auditLogService.getEntityLogs(entityName))
+    public ApiResponse<Page<AuditLogResponse>> getEntityLogs(
+            @PathVariable String entityName,
+            @PageableDefault(sort = "timestamp", direction = Sort.Direction.DESC) Pageable pageable)
+    {
+        return ApiResponse.<Page<AuditLogResponse>>builder()
+                .message("Entity audit logs retrieved successfully.")
+                .result(auditLogService.getEntityLogsPaginated(entityName, pageable))
                 .build();
     }
 }

@@ -12,6 +12,7 @@ import com.shongon.mini_bank.exception.ErrorCode;
 import com.shongon.mini_bank.model.InvalidatedToken;
 import com.shongon.mini_bank.repository.InvalidatedTokenRepository;
 import com.shongon.mini_bank.repository.UserRepository;
+import com.shongon.mini_bank.service.security.AuditLogService;
 import com.shongon.mini_bank.utils.audit.Auditable;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.text.ParseException;
 
@@ -31,10 +34,10 @@ public class AuthService {
     UserRepository userRepository;
     InvalidatedTokenRepository tokenRepository;
     PasswordEncoder passwordEncoder;
+    AuditLogService auditLogService;
     JwtService jwtService;
 
     @Transactional
-    @Auditable(action = "AUTHENTICATE", entityType = "USER")
     public AuthenticateResponse authenticate(AuthenticateRequest authRequest) {
         var user = userRepository
                 .findByUsername(authRequest.getUsername())
@@ -45,6 +48,19 @@ public class AuthService {
 
         var token = jwtService.generateToken(user);
 
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                auditLogService.logAfterCommit(
+                        user.getUserId(),
+                        "AUTHENTICATE",
+                        "USER",
+                        user.getUserId(),
+                        "User authenticated: " + user.getUsername()
+                );
+            }
+        });
+
         return AuthenticateResponse.builder()
                 .isAuthenticated(true)
                 .token(token)
@@ -52,7 +68,6 @@ public class AuthService {
     }
 
     @Transactional
-    @Auditable(action = "LOGOUT", entityType = "USER")
     public void logout(LogoutRequest logoutRequest) throws ParseException, JOSEException {
         try {
             var signToken = jwtService.verifyToken(logoutRequest.getToken(), true);
@@ -71,7 +86,6 @@ public class AuthService {
     }
 
     @Transactional
-    @Auditable(action = "REFRESH_TOKEN", entityType = "USER")
     public AuthenticateResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
         var checkToken = jwtService.verifyToken(request.getToken(), true);
 
@@ -100,7 +114,6 @@ public class AuthService {
     }
 
     @Transactional
-    @Auditable(action = "INTROSPECT", entityType = "USER")
     public IntrospectResponse introspect(IntrospectRequest introspectRequest) {
         var token = introspectRequest.getToken();
         boolean isValid = true;
