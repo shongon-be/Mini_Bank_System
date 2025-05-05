@@ -50,7 +50,7 @@ public class User {
     @Column(insertable = false)
     LocalDateTime updatedAt;
 
-    LocalDateTime deletedAt;
+    LocalDateTime lockedAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<Account> accounts;

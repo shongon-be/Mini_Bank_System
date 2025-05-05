@@ -33,7 +33,4 @@ public class ViewUserProfileResponse {
     UserStatus status;
 
     Set<ViewAllRolesResponse> roles;
-
-//    Map<String, Account> accountTable; -- View all account by fullname
-
 }

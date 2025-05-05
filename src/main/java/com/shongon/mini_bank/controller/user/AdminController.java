@@ -50,11 +50,20 @@ public class AdminController {
 
     // Lock user
     @PutMapping("/lock/{userId}")
-    public ApiResponse<String> lockUser(@PathVariable Long userId, @RequestBody UserStatus userStatus) {
-        userService.lockUser(userId, userStatus);
+    public ApiResponse<String> lockUser(@PathVariable Long userId) {
+        userService.lockUser(userId);
         return ApiResponse.<String>builder()
                 .code(200)
-                .result("User has been locked/unlocked.")
+                .result("User has been locked.")
+                .build();
+    }
+
+    @PutMapping("/unlock/{userId}")
+    public ApiResponse<String> unlockUser(@PathVariable Long userId) {
+        userService.unlockUser(userId);
+        return ApiResponse.<String>builder()
+                .code(200)
+                .result("User has been locked.")
                 .build();
     }
 

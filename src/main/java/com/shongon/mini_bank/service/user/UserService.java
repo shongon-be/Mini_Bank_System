@@ -95,19 +95,14 @@ public class UserService {
 
     // ADMIN FUNCTION: SOFT_DELETE
     @Transactional
-    @Auditable(action = "LOCK_USER", entityType = "USER")
-    public void lockUser(Long userId, UserStatus status) {
-        User user = userRepository.findById(userId)
+    @Auditable(action = "DELETE_USER", entityType = "USER")
+    public void deleteUser(Long userId) {
+        User userToDelete = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        user.setStatus(status);
 
-        if (status == UserStatus.SUSPENDED) {
-            user.setDeletedAt(LocalDateTime.now());
-        } else {
-            user.setDeletedAt(null);
-        }
+        auditLogRepository.deleteByUser_UserId(userId);
 
-        userRepository.save(user);
+        userRepository.delete(userToDelete);
     }
 
     @Transactional(readOnly = true)
@@ -127,13 +122,32 @@ public class UserService {
     }
 
     @Transactional
-    @Auditable(action = "DELETE_USER", entityType = "USER")
-    public void deleteUser(Long userId) {
-        User userToDelete = userRepository.findById(userId)
+    @Auditable(action = "LOCK_USER", entityType = "USER")
+    public void lockUser(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        auditLogRepository.deleteByUser_UserId(userId);
+        if (user.getStatus() != UserStatus.SUSPENDED) {
+            user.setStatus(UserStatus.SUSPENDED);
+            user.setLockedAt(LocalDateTime.now());
+            userRepository.save(user);
+        } else {
+            log.warn("User with ID {} is already SUSPENDED.", userId);
+        }
+    }
 
-        userRepository.delete(userToDelete);
+    @Transactional
+    @Auditable(action = "UNLOCK_USER", entityType = "USER")
+    public void unlockUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        if (user.getStatus() == UserStatus.SUSPENDED) {
+            user.setStatus(UserStatus.ACTIVE);
+            user.setLockedAt(null);
+            userRepository.save(user);
+        } else {
+            log.warn("User with ID {} is not SUSPENDED, no need to unlock.", userId);
+        }
     }
 }

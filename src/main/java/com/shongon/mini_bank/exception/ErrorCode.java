@@ -28,7 +28,6 @@ public enum ErrorCode {
     ROLE_EXISTED(409, HttpStatus.CONFLICT, "Role already existed"),
     ROLE_NOT_FOUND(404, HttpStatus.NOT_FOUND, "Role not found"),
 
-    USER_LOGS_NOT_FOUND(404, HttpStatus.NOT_FOUND, "No logs found for user with ID: {userId}"),
     ;
 
 
