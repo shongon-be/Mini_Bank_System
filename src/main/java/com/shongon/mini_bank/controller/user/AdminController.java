@@ -1,6 +1,6 @@
 package com.shongon.mini_bank.controller.user;
 
-import com.shongon.mini_bank.constant.status.UserStatus;
+import com.shongon.mini_bank.dto.request.role.AssignNRemoveRoleRequest;
 import com.shongon.mini_bank.dto.response.audit_log.AuditLogResponse;
 import com.shongon.mini_bank.dto.response.user.ViewAllUsersResponse;
 import com.shongon.mini_bank.dto.response.user.ViewUserProfileResponse;
@@ -78,8 +78,8 @@ public class AdminController {
     }
     // Assign a role to the user
     @PutMapping("/assign-role/{userId}")
-    public ApiResponse<String> assignRole (@PathVariable Long userId, @RequestBody String roleName) {
-        userProfileService.assignRoleToUser(userId, roleName);
+    public ApiResponse<String> assignRole (@PathVariable Long userId, @RequestBody AssignNRemoveRoleRequest request) {
+        userProfileService.assignRoleToUser(userId, request);
         return ApiResponse.<String>builder()
                 .code(200)
                 .result("Assign new role success.")
@@ -88,8 +88,8 @@ public class AdminController {
 
     // Remove a role from the user
     @PutMapping("/remove-role/{userId}")
-    public ApiResponse<String> removeRole (@PathVariable Long userId, @RequestBody String roleName) {
-        userProfileService.removeRoleFromUser(userId, roleName);
+    public ApiResponse<String> removeRole (@PathVariable Long userId, @RequestBody AssignNRemoveRoleRequest request) {
+        userProfileService.removeRoleFromUser(userId, request);
         return ApiResponse.<String>builder()
                 .code(200)
                 .result("Remove role from user success.")

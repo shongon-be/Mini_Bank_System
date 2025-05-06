@@ -1,5 +1,6 @@
 package com.shongon.mini_bank.service.user;
 
+import com.shongon.mini_bank.dto.request.role.AssignNRemoveRoleRequest;
 import com.shongon.mini_bank.dto.request.user.ChangePasswordRequest;
 import com.shongon.mini_bank.dto.response.user.ChangePasswordResponse;
 import com.shongon.mini_bank.dto.response.user.ViewUserProfileResponse;
@@ -67,11 +68,11 @@ public class UserProfileService {
     // ADMIN
     @Transactional
     @Auditable(action = "ASSIGN_ROLE_TO_USER", entityType = "USER")
-    public void assignRoleToUser(Long userId, String roleName) {
+    public void assignRoleToUser(Long userId, AssignNRemoveRoleRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        Role role = roleRepository.findByRoleName(roleName)
+        Role role = roleRepository.findByRoleName(request.getRoleName())
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
 
         Set<Role> roles = user.getRoles();
@@ -83,11 +84,11 @@ public class UserProfileService {
 
     @Transactional
     @Auditable(action = "REMOVE_ROLE_FROM_USER", entityType = "USER")
-    public void removeRoleFromUser(Long userId, String roleName) {
+    public void removeRoleFromUser(Long userId, AssignNRemoveRoleRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        Role role = roleRepository.findByRoleName(roleName)
+        Role role = roleRepository.findByRoleName(request.getRoleName())
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
 
         Set<Role> roles = user.getRoles();
