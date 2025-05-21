@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.shongon</groupId>
-	<artifactId>mini-bank</artifactId>
+	<artifactId>audit-log</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mini-bank</name>
-	<description>Mini bank system</description>
+	<name>audit-log</name>
+	<description>Audit Log system</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -81,6 +81,12 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+		<!--Swagger API docs-->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.2.0</version>
 		</dependency>
 	</dependencies>
 

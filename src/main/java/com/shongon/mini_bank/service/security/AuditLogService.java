@@ -1,5 +1,6 @@
 package com.shongon.mini_bank.service.security;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.shongon.mini_bank.dto.response.audit_log.AuditLogResponse;
 import com.shongon.mini_bank.exception.AppException;
 import com.shongon.mini_bank.exception.ErrorCode;
@@ -8,6 +9,7 @@ import com.shongon.mini_bank.model.AuditLog;
 import com.shongon.mini_bank.model.User;
 import com.shongon.mini_bank.repository.AuditLogRepository;
 import com.shongon.mini_bank.repository.UserRepository;
+import com.shongon.mini_bank.utils.CustomTime;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -54,7 +56,6 @@ public class AuditLogService {
         Page<AuditLog> logPage = auditLogRepository.findByEntityName(entityName, pageable);
         return logPage.map(auditLogMapper::toAuditLogResponse);
     }
-
 
 //    ******************************************************************************************
     // Log methods

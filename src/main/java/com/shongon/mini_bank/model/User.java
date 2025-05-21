@@ -51,7 +51,4 @@ public class User {
     LocalDateTime updatedAt;
 
     LocalDateTime lockedAt;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    Set<Account> accounts;
 }

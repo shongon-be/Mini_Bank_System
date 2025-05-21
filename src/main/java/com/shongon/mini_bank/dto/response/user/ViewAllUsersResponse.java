@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.shongon.mini_bank.constant.status.UserStatus;
 import com.shongon.mini_bank.dto.response.role.ViewAllRolesResponse;
-import com.shongon.mini_bank.model.Account;
 import com.shongon.mini_bank.utils.CustomTime;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -12,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Set;
 
 @Data

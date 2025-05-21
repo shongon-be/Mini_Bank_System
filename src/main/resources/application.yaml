@@ -1,23 +1,23 @@
 server:
   port: 8082
   servlet:
-    context-path: /bank
+    context-path: /audit
 
 spring:
   application:
-    name: mini-bank
+    name: audit-log
   datasource:
     url: "jdbc:postgresql://localhost:5432/mini_bank"
-    username: postgres
-    password: 16102004
+    username: "postgres"
+    password: "16102004"
     driver-class-name: "org.postgresql.Driver"
   jpa:
     hibernate:
       ddl-auto: update
     open-in-view: off
-    show-sql: true
+    show-sql: off
 
 jwt:
-  signer-key: "OQTu4gDdtKcHPf9Egxllh27BYKTmjpUdsHn4flaYFsSqtL9ubKy+vLNmLyBGL3w6"
-  valid-duration: 600 # 10 mins
-  refreshable-duration: 1800 # 30 mins
+  signer-key: "rrWfIP6xe4nw9hk4cZiN9jDbx5UWWi80FiQnxu3vwpzOYGGesbOUSUjRRyCL1pe3"
+  valid-duration: "600"
+  refreshable-duration: "1800"
